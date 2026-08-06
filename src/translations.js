@@ -123,6 +123,7 @@ export const translations = {
     stock_remaining_label: "Stock Remaining",
 
     // Delivery Module
+    date: "Date",
     assigned_orders: "Today's Delivery Tasks",
     mark_delivered: "Mark Delivered",
     remarks: "Remarks (optional)",
@@ -136,8 +137,17 @@ export const translations = {
     cash: "Cash",
     gpay: "GPay",
     bank: "Bank Transfer",
+    upi: "UPI",
+    cheque: "Cheque",
     transaction_id: "UPI Transaction No / Reference",
     scan_pay: "Scan QR to Pay",
+    split_payment: "Split Payment",
+    add_payment_row: "Add Payment Mode",
+    ref_number: "Reference Number",
+    payment_date: "Payment Date",
+    outstanding_collection: "Outstanding Collection",
+    customer_ledger: "Customer Ledger",
+    daily_collection_report: "Daily Collection Report",
 
     // Billing
     invoice: "Invoice",
@@ -339,6 +349,7 @@ export const translations = {
     stock_remaining_label: "மீதமுள்ள சரக்கு",
 
     // Delivery Module
+    date: "தேதி",
     assigned_orders: "இன்றைய விநியோகப் பணிகள்",
     mark_delivered: "விநியோகிக்கப்பட்டது",
     remarks: "குறிப்புகள் (தேவைப்பட்டால்)",
@@ -352,8 +363,17 @@ export const translations = {
     cash: "ரொக்கம்",
     gpay: "ஜிபே (GPay)",
     bank: "வங்கி பரிமாற்றம்",
+    upi: "யுபிஐ (UPI)",
+    cheque: "காசோலை (Cheque)",
     transaction_id: "UPI பரிவர்த்தனை எண் / குறிப்பு",
     scan_pay: "QR ஸ்கேன் செய்து பணம் செலுத்தவும்",
+    split_payment: "பிரிப்பு கட்டணம் (Split Payment)",
+    add_payment_row: "செலுத்தும் முறை சேர்க்கவும்",
+    ref_number: "குறிப்பு எண்",
+    payment_date: "செலுத்தப்பட்ட தேதி",
+    outstanding_collection: "நிலுவை வசூல்",
+    customer_ledger: "வாடிக்கையாளர் பேரேடு",
+    daily_collection_report: "தினசரி வசூல் அறிக்கை",
 
     // Billing
     invoice: "விலைப்பட்டியல் (Invoice)",
@@ -453,7 +473,13 @@ export const translateShopName = (shop, lang) => {
       "R.R.K. Pattu": "ஆர்.ஆர்.கே. பட்டு",
       "Sri Ram Fruit Stall": "ஸ்ரீ ராம் புரூட் ஸ்டால்",
       "Vijay Bunk": "விஜய் பங்க்",
-      "Venkateswara Bunk": "வெங்கடேஸ்வரா பங்க்"
+      "Venkateswara Bunk": "வெங்கடேஸ்வரா பங்க்",
+      "K.K.N": "கே.கே.என்",
+      "Aavin Milk Depot": "ஆவின் பால் டெப்போ",
+      "Aishwarya Bhavan": "ஐஸ்வர்யா பவன்",
+      "Imported Shop 1": "இறக்குமதி செய்யப்பட்ட கடை 1",
+      "Imported Shop 2": "இறக்குமதி செய்யப்பட்ட கடை 2",
+      "Vishnu Enterprise": "விஷ்ணு எண்டர்பிரைஸ்"
     };
     if (dictionary[trimmedEn]) {
       return dictionary[trimmedEn];
@@ -467,6 +493,36 @@ export const translateShopName = (shop, lang) => {
     });
     if (translated !== nameEn) return translated;
 
+    return nameTa || nameEn;
+  }
+  return nameEn;
+};
+
+export const translateRouteName = (route, lang) => {
+  if (!route) return '';
+  const nameEn = route.name_en || route.name || '';
+  const nameTa = route.name_ta || '';
+  
+  if (lang === 'ta') {
+    const trimmedEn = nameEn.trim();
+    const dictionary = {
+      "Chennai National Highway": "சென்னை தேசிய நெடுஞ்சாலை",
+      "Tindivanam Route": "திண்டிவனம் வழி",
+      "Villupuram Route": "விழுப்புரம் வழி",
+      "Pondicherry Route": "பாண்டிச்சேரி வழி"
+    };
+    if (dictionary[trimmedEn]) {
+      return dictionary[trimmedEn];
+    }
+    if (nameTa && nameTa.trim() !== nameEn.trim()) {
+      return nameTa;
+    }
+    let translated = nameEn;
+    Object.keys(dictionary).forEach(key => {
+      translated = translated.replace(new RegExp(key, 'gi'), dictionary[key]);
+    });
+    if (translated !== nameEn) return translated;
+    
     return nameTa || nameEn;
   }
   return nameEn;

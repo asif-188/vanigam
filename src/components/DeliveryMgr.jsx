@@ -258,7 +258,7 @@ export default function DeliveryMgr({ t, lang, onBillSelected, session, onBulkPr
         <p style={{ color: 'var(--text-muted)' }}>Fulfill orders, collect outstanding payments, and issue final shop receipts</p>
       </div>
 
-      <div className={`delivery-mgr-grid ${activeDelivery ? 'has-panel' : ''}`}>
+      <div className="delivery-mgr-grid">
         
         {/* Deliveries list */}
         <div className="glass-card">
@@ -508,8 +508,20 @@ export default function DeliveryMgr({ t, lang, onBillSelected, session, onBulkPr
 
         {/* Complete delivery sidebar details */}
         {activeDelivery && (
-          <div className="glass-card" style={{ border: '1px solid var(--accent-cyan)' }}>
-            <h2 style={{ marginBottom: '1.25rem', fontSize: '1.25rem', color: 'var(--accent-cyan)' }}>Fulfill Invoice: {activeDelivery.order.invoice_number}</h2>
+          <div className="modal-overlay" style={{ zIndex: 1100 }}>
+            <div className="glass-card modal-card" style={{ border: '1px solid var(--accent-cyan)', maxWidth: '520px', width: '95%', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
+              <h2 style={{ fontSize: '1.25rem', color: 'var(--accent-cyan)', margin: 0 }}>
+                Fulfill Invoice: {activeDelivery.order.invoice_number}
+              </h2>
+              <button 
+                type="button" 
+                onClick={() => setActiveDelivery(null)}
+                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '1.5rem', cursor: 'pointer', lineHeight: 1 }}
+              >
+                ✕
+              </button>
+            </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
               <button
@@ -719,6 +731,7 @@ export default function DeliveryMgr({ t, lang, onBillSelected, session, onBulkPr
                   </div>
                 </div>
               )}
+            </div>
             </div>
           </div>
         )}

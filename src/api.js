@@ -63,7 +63,23 @@ async function getTableData(tableName, fallbackUrl, targetTenantId = null) {
       const docRef = doc(db, 'tenants', tenantId, 'tables', tableName);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        return docSnap.data().data || [];
+        const docData = docSnap.data();
+        if (docData && docData.is_chunked) {
+          const totalChunks = docData.total_chunks || 1;
+          const chunkPromises = [];
+          for (let i = 0; i < totalChunks; i++) {
+            chunkPromises.push(getDoc(doc(db, 'tenants', tenantId, 'tables', `${tableName}__chunk_${i}`)));
+          }
+          const chunkSnaps = await Promise.all(chunkPromises);
+          const combined = [];
+          for (const cSnap of chunkSnaps) {
+            if (cSnap.exists()) {
+              combined.push(...(cSnap.data()?.data || []));
+            }
+          }
+          return combined;
+        }
+        return docData?.data || [];
       }
       return [];
     } catch (err) {

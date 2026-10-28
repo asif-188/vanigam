@@ -115,7 +115,7 @@ async function readDB(tenantId) {
   } else {
     try {
       const now = Date.now();
-      const hasFreshCache = cachedDBs[tenantId] && (now - (lastMetaCheck[tenantId] || 0) < 15000);
+      const hasFreshCache = cachedDBs[tenantId] && (now - (lastMetaCheck[tenantId] || 0) < 60000);
       
       let lastUpdated = 0;
       if (!hasFreshCache) {
@@ -2063,10 +2063,7 @@ app.get('/api/orders/:id', async (req, res) => {
 
 app.get('/api/orders', async (req, res) => {
   const db = await readDB(req.tenantId);
-  if (db.shops) {
-    db.shops.forEach(s => autoAllocatePaymentsAndFulfillOrders(db, s.id));
-  }
-  res.json(db.orders);
+  res.json(db.orders || []);
 });
 
 app.get('/api/orders/items', async (req, res) => {

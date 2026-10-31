@@ -1165,8 +1165,19 @@ export default function DeliveryMgr({ t, lang, onBillSelected, session, onBulkPr
                                 ⚡ {t('fulfill')}
                               </button>
                             </>
-                          ) : (
+                                                    ) : (
                             <>
+                              {(session?.role === 'admin' || session?.role === 'superadmin') && (
+                                <button
+                                  type="button"
+                                  className="language-btn"
+                                  onClick={() => onEditOrder ? onEditOrder(order) : handleStartEditOrder(order)}
+                                  style={{ padding: '0.35rem 0.6rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                                  title={lang === 'ta' ? 'பில் திருத்துக' : 'Edit Invoice'}
+                                >
+                                  ✏️
+                                </button>
+                              )}
                               <button className="language-btn" style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem' }} onClick={() => onBillSelected(order.id)}>
                                 🖨️ {lang === 'ta' ? 'பில் அச்சிடு' : 'Print Bill'}
                               </button>

@@ -109,6 +109,16 @@ export default function OrderTaking({ t, lang, currentUser, onOrderCreated, edit
   // Pre-fill fields when editing an order
   useEffect(() => {
     if (editingOrder) {
+      if (editingOrder.status && editingOrder.status !== 'pending') {
+        const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'superadmin';
+        if (!isAdmin) {
+          alert(lang === 'ta' 
+            ? 'நிர்வாகி மட்டுமே பூர்த்தி செய்யப்பட்ட பில்களை திருத்த முடியும்.' 
+            : 'Only Admin role can edit completed or fulfilled invoices.');
+          if (onCancelEdit) onCancelEdit();
+          return;
+        }
+      }
       setSelectedRoute(editingOrder.route_id || '');
       setSelectedShop(editingOrder.shop_id || '');
       setDiscount(editingOrder.discount || 0);
@@ -1230,7 +1240,7 @@ export default function OrderTaking({ t, lang, currentUser, onOrderCreated, edit
               {editingOrder ? `✏️ ${lang === 'ta' ? 'விலைப்பட்டியல் திருத்துக' : 'Edit Invoice'}` : `🛒 ${t('order_taking')}`}
             </h1>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-              {editingOrder ? (lang === 'ta' ? 'விலைப்பட்டியலின் பொருள்களை திருத்தவும்' : 'Modify items, quantities or discount for this pending invoice') : 'Quick Order entry with live-synced smart cart panel'}
+              {editingOrder ? (lang === 'ta' ? 'விலைப்பட்டியலின் பொருள்களை திருத்தவும்' : 'Modify items, quantities or discount for this invoice') : 'Quick Order entry with live-synced smart cart panel'}
             </p>
           </div>
 

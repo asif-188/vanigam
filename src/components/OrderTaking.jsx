@@ -109,15 +109,13 @@ export default function OrderTaking({ t, lang, currentUser, onOrderCreated, edit
   // Pre-fill fields when editing an order
   useEffect(() => {
     if (editingOrder) {
-      if (editingOrder.status && editingOrder.status !== 'pending') {
-        const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'superadmin';
-        if (!isAdmin) {
-          alert(lang === 'ta' 
-            ? 'நிர்வாகி மட்டுமே பூர்த்தி செய்யப்பட்ட பில்களை திருத்த முடியும்.' 
-            : 'Only Admin role can edit completed or fulfilled invoices.');
-          if (onCancelEdit) onCancelEdit();
-          return;
-        }
+      const isCompleted = editingOrder.status === 'delivered' || editingOrder.status === 'completed';
+      if (isCompleted) {
+        alert(lang === 'ta' 
+          ? 'பூர்த்தி செய்யப்பட்ட பில்களை திருத்த முடியாது. விநியோகிக்கப்படாத ஆர்டர்களை மட்டுமே திருத்த முடியும்.' 
+          : 'Cannot edit completed or fulfilled invoices. Only open/unfulfilled invoices can be edited.');
+        if (onCancelEdit) onCancelEdit();
+        return;
       }
       setSelectedRoute(editingOrder.route_id || '');
       setSelectedShop(editingOrder.shop_id || '');

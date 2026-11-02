@@ -529,7 +529,7 @@ export default function Billing({ orderId, initialData, t, lang, onBack, onNewBi
                 ➕ {lang === 'ta' ? 'புதிய பில்' : 'New Bill'}
               </button>
             )}
-            {onEditOrder && order && (session?.role === 'admin' || session?.role === 'superadmin' || order.status === 'pending') && (
+            {onEditOrder && order && order.status !== 'delivered' && order.status !== 'completed' && (
               <button
                 type="button"
                 className="btn btn-secondary"

@@ -135,6 +135,13 @@ export default function DeliveryMgr({ t, lang, onBillSelected, session, onBulkPr
   const [savingEdit, setSavingEdit] = useState(false);
 
   const handleStartEditOrder = async (order) => {
+    const isCompleted = order.status === 'delivered' || order.status === 'completed';
+    if (isCompleted) {
+      alert(lang === 'ta'
+        ? 'பூர்த்தி செய்யப்பட்ட பில்களை திருத்த முடியாது. விநியோகிக்கப்படாத ஆர்டர்களை மட்டுமே திருத்த முடியும்.'
+        : 'Cannot edit completed or fulfilled invoices. Only open/unfulfilled invoices can be edited.');
+      return;
+    }
     try {
       const [pData, oiData] = await Promise.all([
         api.getProducts(),
@@ -1167,17 +1174,7 @@ export default function DeliveryMgr({ t, lang, onBillSelected, session, onBulkPr
                             </>
                                                     ) : (
                             <>
-                              {(session?.role === 'admin' || session?.role === 'superadmin') && (
-                                <button
-                                  type="button"
-                                  className="language-btn"
-                                  onClick={() => onEditOrder ? onEditOrder(order) : handleStartEditOrder(order)}
-                                  style={{ padding: '0.35rem 0.6rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-                                  title={lang === 'ta' ? 'பில் திருத்துக' : 'Edit Invoice'}
-                                >
-                                  ✏️
-                                </button>
-                              )}
+                              
                               <button className="language-btn" style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem' }} onClick={() => onBillSelected(order.id)}>
                                 🖨️ {lang === 'ta' ? 'பில் அச்சிடு' : 'Print Bill'}
                               </button>

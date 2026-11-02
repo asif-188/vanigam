@@ -2591,15 +2591,15 @@ app.put('/api/orders/:id', async (req, res) => {
       return res.status(400).json({ error: 'Cannot edit cancelled orders.' });
     }
 
-    // Role check: Completed or fulfilled invoices can only be edited by Admin role
-    if (order.status !== 'pending') {
-      const userRole = req.user?.role;
-      const isAdmin = userRole === 'admin' || userRole === 'superadmin';
-      if (!isAdmin) {
-        return res.status(403).json({
-          error: 'Only Admin role can edit completed or fulfilled invoices. / நிர்வாகி மட்டுமே பூர்த்தி செய்யப்பட்ட பில்களை திருத்த முடியும்.'
-        });
-      }
+    // Only unfulfilled orders can be edited. Completed or delivered invoices cannot be edited.
+    const isCompleted = order.status === 'delivered' || order.status === 'completed';
+    const delivery = (db.deliveries || []).find(d => d.order_id === order.id);
+    const isDeliveryDelivered = delivery && delivery.status === 'delivered';
+
+    if (isCompleted || isDeliveryDelivered) {
+      return res.status(400).json({
+        error: 'Cannot edit completed or fulfilled invoices. Only open/unfulfilled invoices can be edited. / பூர்த்தி செய்யப்பட்ட பில்களை திருத்த முடியாது. விநியோகிக்கப்படாத ஆர்டர்களை மட்டுமே திருத்த முடியும்.'
+      });
     }
 
     const shop = db.shops.find(s => s.id === order.shop_id);
